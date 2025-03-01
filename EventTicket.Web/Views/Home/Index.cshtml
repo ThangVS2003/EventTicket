@@ -1,8 +1,125 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<EventTicket.Data.Models.Event>
+
+@{
+    ViewData["Title"] = "Trang Chủ";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+
+    <!-- ***** Trang Bán Vé ***** -->
+    <div class="page-heading-shows-events">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Vé Đang Mở Bán!</h2>
+                    <span>Kiểm tra các sự kiện sắp tới và mua vé ngay bây giờ.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tickets-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="search-box">
+                        <form id="subscribe" action="" method="get">
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <div class="search-heading">
+                                        <h4>Lọc sự kiện theo:</h4>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <select name="month">
+                                                <option value="">Chọn tháng</option>
+                                                <option value="June">Tháng 6</option>
+                                                <option value="July">Tháng 7</option>
+                                                <option value="August">Tháng 8</option>
+                                                <option value="September">Tháng 9</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <select name="location">
+                                                <option value="">Chọn địa điểm</option>
+                                                <option value="Brazil">Brazil</option>
+                                                <option value="Europe">Châu Âu</option>
+                                                <option value="US">Mỹ</option>
+                                                <option value="Asia">Châu Á</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <select name="price">
+                                                <option value="">Chọn giá</option>
+                                                <option value="0-50">0 - 1,200,000 VND</option>
+                                                <option value="50-100">1,200,000 - 2,400,000 VND</option>
+                                                <option value="100-200">2,400,000 - 4,800,000 VND</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <fieldset>
+                                                <button type="submit" id="form-submit" class="main-dark-button">Tìm Kiếm</button>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4">
+                        <div class="ticket-item">
+                            <div class="thumb">
+                                <img src="@item.Image" alt="@item.Name">
+                                <div class="price">
+                                    <span>Vé từ <em>@string.Format("{0:#,##0} VND", item.Price)</em></span>
+                                </div>
+                            </div>
+                            <div class="down-content">
+                                <span>Còn lại @item.TotalTickets vé</span>
+                                <h4>@item.Name</h4>
+                                <ul>
+                                    <li>
+                                        <i class="fa fa-clock-o"></i>
+                                        @item.EventDate.ToString("dd/MM/yyyy")
+                                        - @(item.EndDate?.ToString("dd/MM/yyyy") ?? "N/A")
+                                    </li>
+
+                                    <li><i class="fa fa-map-marker"></i> @item.Location</li>
+                                </ul>
+                                <div class="main-dark-button">
+                                    <a href="@Url.Action("Details", "Event", new { id = item.EventId })">Mua Vé Ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-lg-12">
+                    <div class="pagination">
+                        <ul>
+                            <li><a href="#">Trước</a></li>
+                            <li><a href="#">1</a></li>
+                            <li class="active"><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">Sau</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

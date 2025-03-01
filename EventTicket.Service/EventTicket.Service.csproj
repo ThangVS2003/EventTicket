@@ -10,4 +10,8 @@
     <ProjectReference Include="..\EventTicket.Data\EventTicket.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IService\" />
+  </ItemGroup>
+
 </Project>

@@ -1,3 +1,6 @@
+using EventTicket.Data.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace EventTicket.Web
 {
     public class Program
@@ -8,7 +11,8 @@ namespace EventTicket.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddDbContext<EventTicketContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

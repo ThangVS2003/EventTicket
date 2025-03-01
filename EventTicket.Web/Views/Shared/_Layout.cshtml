@@ -1,49 +1,146 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EventTicket.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/EventTicket.Web.styles.css" asp-append-version="true" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Tooplate">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <title>ArtXibition - Tickets Page</title>
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/owl-carousel.css">
+    <link rel="stylesheet" href="assets/css/tooplate-artxibition.css">
+    <style>
+        /* CSS tùy chỉnh cho header mới */
+        .pre-header-ticketbox {
+            background-color: #FF00FF; /* Màu hồng giống trong hình */
+            padding: 10px 0;
+            color: white;
+        }
+
+            .pre-header-ticketbox .container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between; /* Phân bố đều các thành phần */
+            }
+
+            .pre-header-ticketbox .logo {
+                font-size: 24px;
+                font-weight: bold;
+                color: white;
+                text-decoration: none;
+                margin-right: 20px; /* Khoảng cách giữa logo và search */
+            }
+
+            .pre-header-ticketbox .search-container {
+                display: flex;
+                align-items: center;
+                flex-grow: 1; /* Làm cho search chiếm phần giữa */
+                justify-content: center; /* Căn giữa thanh tìm kiếm */
+            }
+
+            .pre-header-ticketbox .search-input {
+                padding: 8px;
+                border: none;
+                border-radius: 4px;
+                width: 200px;
+                margin-right: 10px;
+            }
+
+            .pre-header-ticketbox .search-button,
+            .pre-header-ticketbox .create-event-button {
+                padding: 8px 16px;
+                background-color: white;
+                border: none;
+                border-radius: 4px;
+                color: #1db954; /* Màu xanh lá cây cho nút */
+                cursor: pointer;
+                margin-right: 10px;
+            }
+
+            .pre-header-ticketbox .login-register {
+                display: flex;
+                align-items: center;
+            }
+
+            .pre-header-ticketbox .login-button {
+                padding: 8px 16px;
+                background-color: white; /* Nền trắng cho nút Đăng nhập */
+                border: none;
+                border-radius: 4px;
+                color: #FF00FF; /* Màu chữ hồng để tương phản với nền */
+                text-decoration: none;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+
+        .header-area .nav {
+            justify-content: center;
+        }
+
+            .header-area .nav li a {
+                color: white;
+                margin: 0 15px;
+            }
+
+                .header-area .nav li a.active {
+                    color: #1db954;
+                }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EventTicket.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <!-- ***** Pre Header (Ticketbox Style) ***** -->
+    <div class="pre-header-ticketbox">
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo">Event<em>Ticket</em></a>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Bạn tìm gì hôm nay?">
+                <button class="search-button">Tìm kiếm</button>
+                <button class="create-event-button">Tạo sự kiện</button>
+            </div>
+            <div class="login-register">
+                <a href="#" class="login-button">Đăng nhập</a>
+                <div class="flag-icon"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="/" class="logo">Thang<em>Nee</em></a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li><a href="/" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">Home</a></li>
+                            <li><a href="/about.html">About Us</a></li>
+                            <li><a href="/rent-venue.html">Rent Venue</a></li>
+                            <li><a href="/shows-events.html">Shows & Events</a></li>
+                            <li><a href="/tickets.html" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Tickets" ? "active" : "")">Tickets</a></li>
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
+    <!-- ***** Header Area End ***** -->
+    <!-- Đặt nội dung chính (main) ở đây nếu cần -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - EventTicket.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

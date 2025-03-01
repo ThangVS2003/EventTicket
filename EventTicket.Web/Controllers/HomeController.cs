@@ -1,3 +1,4 @@
+﻿using EventTicket.Data.Models;
 using EventTicket.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -6,27 +7,17 @@ namespace EventTicket.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly EventTicketContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(EventTicketContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var events = _context.Events.ToList(); // Lấy danh sách sự kiện từ database
+            return View(events);
         }
     }
 }
