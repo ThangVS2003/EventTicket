@@ -1007,8 +1007,8 @@ Footer
 */
 
 footer {
-  padding-top: 60px;
-  margin-bottom: 25px;
+    padding-top: 10px;
+    background: #7c838b;
 }
 
 footer h4 {
@@ -1563,6 +1563,7 @@ Shows Events Page
   background-repeat: no-repeat;
   padding: 110px 0px;
   text-align: center;
+  margin: 17px;
 }
 
 .page-heading-shows-events h2 {
@@ -1578,6 +1579,7 @@ Shows Events Page
   font-weight: 300;
   padding: 0px 250px;
   display: inline-block;
+  margin: 0px;
 }
 
 .shows-events-tabs {
@@ -2058,7 +2060,7 @@ Ticket Details Page
   text-align: right;
 }
 .ticket-details-page .right-content .warn p {
-  margin-top: 45px;
+  margin-top: 70px;
 }
 
 

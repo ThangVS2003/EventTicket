@@ -1,4 +1,5 @@
-using EventTicket.Data.Models;
+﻿using EventTicket.Data.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventTicket.Web
@@ -12,7 +13,16 @@ namespace EventTicket.Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<EventTicketContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<EventTicket.Service.Service.EventService>(); // Đăng ký EventService trước khi Build
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -28,6 +38,7 @@ namespace EventTicket.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -1,0 +1,117 @@
+﻿@model EventTicket.Data.Models.Event
+
+@{
+    ViewData["Title"] = "Event Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- ***** Ticket Details ***** -->
+<div class="ticket-details-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="left-image">
+                    <img src="@Model.Image" alt="@Model.Name" onerror="this.src='/assets/images/ticket-details.jpg'" />
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="right-content">
+                    <h4>@Model.Name</h4>
+                    <span>@Model.TotalTickets Vé Hiện Đang Còn</span>
+                    <ul>
+                        <li><i class="fa fa-clock-o"></i> @Model.EventDate.ToString("dddd HH:mm") @(Model.EndDate.HasValue ? $" to {Model.EndDate.Value.ToString("HH:mm")}" : "")</li>
+                        <li><i class="fa fa-map-marker"></i> @Model.Location</li>
+                    </ul>
+                    <div class="quantity-content">
+                        <div class="left-content">
+                            <h6>Standard Ticket</h6>
+                            <p>@Model.Price.ToString("N0") VND cho 1 vé</p>
+                        </div>
+                        <div class="right-content">
+                            <div class="quantity buttons_added">
+                                <input type="button" value="-" class="minus">
+                                <input type="number" step="1" min="1" max="10" name="quantity" value="1" title="Qty" class="input-text qty text" size="4">
+                                <input type="button" value="+" class="plus">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total">
+                        <h4>Total: <span class="total-price">@Model.Price.ToString("N0") VNĐ</span></h4>
+                        <div class="main-dark-button"><a href="#">Purchase Tickets</a></div>
+                    </div>
+                    @* <div class="warn">
+                        <p>*Tối đa 10 vé cho sự kiện này</p>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Thêm SweetAlert2 -->
+<script>
+    $(document).ready(function () {
+        const pricePerTicket = @Model.Price;
+        const $quantityInput = $('.qty');
+        const $totalPrice = $('.total-price');
+
+        function updateTotal() {
+            const quantity = parseInt($quantityInput.val());
+            let total = pricePerTicket * quantity;
+            $totalPrice.text(total.toLocaleString('vi-VN') + ' VNĐ');
+        }
+
+        function showAlert(message) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Thông báo',
+                text: message,
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'animated bounceIn' // Hiệu ứng khi popup xuất hiện
+                }
+            });
+        }
+
+        $quantityInput.on('input change', function () {
+            let quantity = parseInt($quantityInput.val());
+
+            // Đảm bảo số lượng vé không nhỏ hơn 1
+            if (quantity < 1) {
+                quantity = 1;
+                $quantityInput.val(1);
+            }
+
+            // Đảm bảo số lượng vé không lớn hơn 10
+            if (quantity > 10) {
+                quantity = 10;
+                $quantityInput.val(10);
+                showAlert('Bạn chỉ có thể mua tối đa 10 vé cho sự kiện này!');
+            }
+
+            updateTotal();
+        });
+
+        // Sử dụng event delegation để đảm bảo sự kiện click được gắn đúng cách
+        $(document).on('click', '.plus', function () {
+            let quantity = parseInt($quantityInput.val());
+            if (quantity < 10) {
+                quantity += 1;
+                $quantityInput.val(quantity);
+                updateTotal();
+            } else {
+                showAlert('Bạn chỉ có thể mua tối đa 10 vé cho sự kiện này!');
+            }
+        });
+
+        $(document).on('click', '.minus', function () {
+            let quantity = parseInt($quantityInput.val());
+            if (quantity > 1) {
+                quantity -= 1;
+                $quantityInput.val(quantity);
+                updateTotal();
+            }
+        });
+
+        updateTotal(); // Khởi tạo giá trị ban đầu
+    });
+</script>

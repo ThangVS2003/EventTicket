@@ -1,0 +1,40 @@
+﻿@model List<EventTicket.Data.Models.PaymentHistory>
+
+<div class="container">
+    <h2 class="text-center">Lịch sử giao dịch</h2>
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <partial name="_ProfileSidebar" />
+        </div>
+        <!-- Nội dung chính -->
+        <div class="col-md-9">
+            @if (Model.Any())
+            {
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Số tiền</th>
+                            <th>Ngày giao dịch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model)
+                        {
+                            <tr>
+                                <td>@payment.PaymentId</td>
+                                <td>@payment.Amount.ToString("C")</td>
+                                <td>@payment.PaymentDate?.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Chưa có giao dịch nào.</p>
+            }
+        </div>
+    </div>
+</div>

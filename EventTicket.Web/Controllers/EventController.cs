@@ -1,6 +1,7 @@
 ﻿using EventTicket.Data.Models;
 using EventTicket.Service.Service;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EventTicket.Web.Controllers
 {
@@ -13,21 +14,16 @@ namespace EventTicket.Web.Controllers
             _eventService = eventService;
         }
 
-        // Hiển thị tất cả sự kiện
-        public IActionResult Index(int? month, string? location, decimal? minPrice, decimal? maxPrice)
+        public async Task<IActionResult> EventDetail(int id)
         {
-            List<Event> events;
+            var eventDetail = await _eventService.GetEventByIdAsync(id);
 
-            if (month.HasValue || !string.IsNullOrEmpty(location) || minPrice.HasValue || maxPrice.HasValue)
+            if (eventDetail == null)
             {
-                events = _eventService.FilterEvents(month, location, minPrice, maxPrice);
-            }
-            else
-            {
-                events = _eventService.GetAllEvents();
+                return NotFound();
             }
 
-            return View(events);
+            return View(eventDetail); // Chỉ định view cụ thể
         }
     }
 }

@@ -1,0 +1,50 @@
+﻿<div class="sidebar">
+    <h4>Quản lý tài khoản</h4>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")"
+               asp-controller="Profile" asp-action="Index">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ChangePassword" ? "active" : "")"
+               asp-controller="Profile" asp-action="ChangePassword">Đổi mật khẩu</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "PaymentHistory" ? "active" : "")"
+               asp-controller="Profile" asp-action="PaymentHistory">Lịch sử giao dịch</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "PurchasedTickets" ? "active" : "")"
+               asp-controller="Profile" asp-action="PurchasedTickets">Vé đã mua</a>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        height: 100%;
+    }
+
+    .sidebar h4 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .sidebar .nav-link {
+        color: #333;
+        padding: 10px 15px;
+        border-radius: 4px;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #FF00FF; /* Màu hồng giống header */
+        color: white;
+    }
+</style>

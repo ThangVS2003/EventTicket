@@ -1,0 +1,44 @@
+﻿@model EventTicket.Web.ViewModel.ProfileViewModel
+
+<div class="container">
+    <h2 class="text-center">Trang cá nhân</h2>
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <partial name="_ProfileSidebar" />
+        </div>
+        <!-- Nội dung chính -->
+        <div class="col-md-9">
+            <div class="profile-info">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Họ và tên:</strong> @Model.Name</p>
+                        <p><strong>Email:</strong> @Model.Email</p>
+                        <p><strong>Số điện thoại:</strong> @Model.Phone</p>
+                        <p><strong>Tên đăng nhập:</strong> @Model.Username</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Số dư tài khoản:</strong> @Model.Money?.ToString("C")</p>
+                        <p><strong>Ngày tạo tài khoản:</strong> @Model.CreatedDate?.ToString("dd/MM/yyyy")</p>
+                        <p><strong>Ngày cập nhật:</strong> @Model.UpdatedDate?.ToString("dd/MM/yyyy")</p>
+                        <p><strong>Vai trò:</strong> @Model.RoleName</p>
+                    </div>
+                </div>
+            </div>
+            <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Quay lại trang chủ</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-info {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+        .profile-info p {
+            margin: 10px 0;
+        }
+</style>

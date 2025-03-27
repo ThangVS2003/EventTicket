@@ -1,4 +1,5 @@
 ﻿using EventTicket.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,23 +22,11 @@ namespace EventTicket.Service.Service
             return _context.Events.Where(e => e.IsDeleted == false).ToList();
         }
 
-        public List<Event> FilterEvents(int? month, string? location, decimal? minPrice, decimal? maxPrice)
+        public async Task<Event> GetEventByIdAsync(int eventId)
         {
-            var query = _context.Events.Where(e => e.IsDeleted == false);
-
-            if (month.HasValue)
-                query = query.Where(e => e.EventDate.Month == month.Value);
-
-            if (!string.IsNullOrEmpty(location))
-                query = query.Where(e => e.Location.Contains(location));
-
-            if (minPrice.HasValue)
-                query = query.Where(e => e.Price >= minPrice.Value);
-
-            if (maxPrice.HasValue)
-                query = query.Where(e => e.Price <= maxPrice.Value);
-
-            return query.ToList();
+            return await _context.Events
+                .Include(e => e.Category) // Bao gồm thông tin Category nếu cần
+                .FirstOrDefaultAsync(e => e.EventId == eventId && e.IsDeleted != true);
         }
     }
 }

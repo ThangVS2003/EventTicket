@@ -1,0 +1,42 @@
+﻿@model List<EventTicket.Data.Models.Order>
+
+<div class="container">
+    <h2 class="text-center">Vé đã mua</h2>
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <partial name="_ProfileSidebar" />
+        </div>
+        <!-- Nội dung chính -->
+        <div class="col-md-9">
+            @if (Model.Any())
+            {
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tổng tiền</th>
+                            <th>Ngày đặt</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.OrderId</td>
+                                <td>@order.TotalAmount.ToString("C")</td>
+                                <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
+                                <td>@order.PaymentStatus</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Chưa có vé nào được mua.</p>
+            }
+        </div>
+    </div>
+</div>
