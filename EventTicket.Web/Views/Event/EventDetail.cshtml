@@ -4,6 +4,7 @@
     ViewData["Title"] = "Event Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <!-- ***** Ticket Details ***** -->
 <div class="ticket-details-page">
     <div class="container">
@@ -36,18 +37,25 @@
                     </div>
                     <div class="total">
                         <h4>Total: <span class="total-price">@Model.Price.ToString("N0") VNĐ</span></h4>
-                        <div class="main-dark-button"><a href="#">Purchase Tickets</a></div>
+                        <div class="main-dark-button">
+                            <button type="button" class="purchase-tickets-btn">Purchase Tickets</button>
+                        </div>
                     </div>
-                    @* <div class="warn">
-                        <p>*Tối đa 10 vé cho sự kiện này</p>
-                    </div> *@
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Thêm SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
         const pricePerTicket = @Model.Price;
@@ -58,6 +66,7 @@
             const quantity = parseInt($quantityInput.val());
             let total = pricePerTicket * quantity;
             $totalPrice.text(total.toLocaleString('vi-VN') + ' VNĐ');
+            return total;
         }
 
         function showAlert(message) {
@@ -67,7 +76,7 @@
                 text: message,
                 confirmButtonText: 'OK',
                 customClass: {
-                    popup: 'animated bounceIn' // Hiệu ứng khi popup xuất hiện
+                    popup: 'animated bounceIn'
                 }
             });
         }
@@ -75,13 +84,11 @@
         $quantityInput.on('input change', function () {
             let quantity = parseInt($quantityInput.val());
 
-            // Đảm bảo số lượng vé không nhỏ hơn 1
             if (quantity < 1) {
                 quantity = 1;
                 $quantityInput.val(1);
             }
 
-            // Đảm bảo số lượng vé không lớn hơn 10
             if (quantity > 10) {
                 quantity = 10;
                 $quantityInput.val(10);
@@ -91,7 +98,6 @@
             updateTotal();
         });
 
-        // Sử dụng event delegation để đảm bảo sự kiện click được gắn đúng cách
         $(document).on('click', '.plus', function () {
             let quantity = parseInt($quantityInput.val());
             if (quantity < 10) {
@@ -112,6 +118,27 @@
             }
         });
 
-        updateTotal(); // Khởi tạo giá trị ban đầu
+        $(document).on('click', '.purchase-tickets-btn', function () {
+            const quantity = parseInt($quantityInput.val());
+            const total = updateTotal();
+
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận mua vé',
+                html: `Bạn muốn mua <strong>${quantity}</strong> vé cho sự kiện <strong>@Model.Name</strong> với tổng giá: <strong>${total.toLocaleString('vi-VN')} VNĐ</strong>?`,
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy',
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/Payment/Checkout?eventId=@Model.EventId&quantity=${quantity}`;
+                }
+            });
+        });
+
+        updateTotal();
     });
 </script>

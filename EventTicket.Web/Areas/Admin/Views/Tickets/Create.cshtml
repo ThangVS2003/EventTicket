@@ -1,0 +1,54 @@
+﻿@model EventTicket.Web.ViewModels.TicketViewModel
+@{
+    ViewData["Title"] = "Thêm vé mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <h1>Thêm vé mới</h1>
+</div>
+
+<div class="content">
+    <div class="card">
+        <div class="card-body">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-exclamation-triangle"></i> Lỗi!</h5>
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="EventId" class="control-label"></label>
+                    <select asp-for="EventId" class="form-control" asp-items="ViewBag.EventId" required>
+                        <option value="">Chọn sự kiện</option>
+                    </select>
+                    <span asp-validation-for="EventId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SeatNumber" class="control-label"></label>
+                    <input asp-for="SeatNumber" class="form-control" required />
+                    <span asp-validation-for="SeatNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label"></label>
+                    <input asp-for="Status" class="form-control" value="Available" readonly />
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Thêm" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

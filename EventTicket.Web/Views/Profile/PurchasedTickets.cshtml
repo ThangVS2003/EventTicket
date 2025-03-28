@@ -1,42 +1,51 @@
-﻿@model List<EventTicket.Data.Models.Order>
+﻿@model IEnumerable<EventTicket.Data.Models.UserTicket>
 
-<div class="container">
-    <h2 class="text-center">Vé đã mua</h2>
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3">
-            <partial name="_ProfileSidebar" />
-        </div>
-        <!-- Nội dung chính -->
-        <div class="col-md-9">
-            @if (Model.Any())
-            {
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tổng tiền</th>
-                            <th>Ngày đặt</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var order in Model)
-                        {
-                            <tr>
-                                <td>@order.OrderId</td>
-                                <td>@order.TotalAmount.ToString("C")</td>
-                                <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
-                                <td>@order.PaymentStatus</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>Chưa có vé nào được mua.</p>
-            }
-        </div>
+@{
+    ViewData["Title"] = "Purchased Tickets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Purchased Tickets</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
     </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Event Name</th>
+            <th>Ticket ID</th>
+            <th>Seat Number</th>
+            <th>Price</th>
+            <th>Order Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userTicket in Model)
+        {
+            <tr>
+                <td>@userTicket.Ticket.Event.Name</td>
+                <td>@userTicket.Ticket.TicketId</td>
+                <td>@userTicket.Ticket.SeatNumber</td>
+                <td>@userTicket.Ticket.Price.ToString("N0") VND</td>
+                <td>@userTicket.Order.OrderDate?.ToString("dd/MM/yyyy HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="TransactionHistory" asp-controller="Profile">View Transaction History</a> |
+    <a asp-action="Index" asp-controller="Home">Back to Home</a>
 </div>

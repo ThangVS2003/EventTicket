@@ -36,4 +36,6 @@ public partial class Order
     public virtual Ticket Ticket { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
+
+    public virtual ICollection<UserTicket> UserTickets { get; set; } = new List<UserTicket>();
 }

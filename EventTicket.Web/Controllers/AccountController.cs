@@ -57,7 +57,7 @@ namespace EventTicket.Web.Controllers
                     // Phân quyền: Nếu là admin, chuyển hướng đến dashboard
                     if (user.Role?.Name == "Admin")
                     {
-                        return RedirectToAction("Index", "Dashboard");
+                        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                     }
                     else
                     {

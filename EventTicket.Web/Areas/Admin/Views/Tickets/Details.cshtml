@@ -1,0 +1,29 @@
+﻿@model EventTicket.Data.Models.Ticket
+
+@{
+    ViewData["Title"] = "Ticket Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Ticket Details</h2>
+
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Ticket ID</dt>
+        <dd class="col-sm-10">@Model.TicketId</dd>
+        <dt class="col-sm-2">Event</dt>
+        <dd class="col-sm-10">@Model.Event.Name</dd>
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">@Model.Price.ToString("N0") VND</dd>
+        <dt class="col-sm-2">Seat Number</dt>
+        <dd class="col-sm-10">@Model.SeatNumber</dd>
+        <dt class="col-sm-2">Status</dt>
+        <dd class="col-sm-10">@Model.Status</dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TicketId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -18,7 +18,7 @@
                         <p><strong>Tên đăng nhập:</strong> @Model.Username</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Số dư tài khoản:</strong> @Model.Money?.ToString("C")</p>
+                        <p><strong>Số dư tài khoản:</strong>@string.Format("{0:#,##0} VND", Model.Money)</p>
                         <p><strong>Ngày tạo tài khoản:</strong> @Model.CreatedDate?.ToString("dd/MM/yyyy")</p>
                         <p><strong>Ngày cập nhật:</strong> @Model.UpdatedDate?.ToString("dd/MM/yyyy")</p>
                         <p><strong>Vai trò:</strong> @Model.RoleName</p>

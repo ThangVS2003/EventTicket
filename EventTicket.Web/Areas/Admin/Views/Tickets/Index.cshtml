@@ -1,0 +1,84 @@
+﻿@model EventTicket.Web.ViewModels.PaginatedList<EventTicket.Data.Models.Ticket>
+@{
+    ViewData["Title"] = "Quản lý vé";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <h1 class="m-0">Quản lý vé</h1>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <a asp-action="Create" class="btn btn-primary">Thêm vé mới</a>
+                <form class="form-inline" method="get" asp-action="Index">
+                    <input class="form-control mr-2" type="text" name="searchString" value="@ViewBag.SearchString" placeholder="Tìm theo số ghế hoặc sự kiện" />
+                    <button class="btn btn-outline-primary" type="submit">Tìm</button>
+                </form>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible mb-0" style="flex-grow: 1; margin-left: 10px;">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <span>@TempData["SuccessMessage"]</span>
+                    </div>
+                }
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Sự kiện</th>
+                            <th>Giá vé (VND)</th>
+                            <th>Số ghế</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.Event?.Name</td>
+                                <td>@item.Price.ToString("N0")</td>
+                                <td>@item.SeatNumber</td>
+                                <td>@item.Status</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.TicketId" class="btn btn-sm btn-warning">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@item.TicketId" class="btn btn-sm btn-danger">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="mt-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex - 1, searchString = ViewBag.SearchString })" aria-label="Previous">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = i, searchString = ViewBag.SearchString })">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex + 1, searchString = ViewBag.SearchString })" aria-label="Next">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <span>Trang @Model.PageIndex / @Model.TotalPages (Tổng: @Model.TotalItems vé)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

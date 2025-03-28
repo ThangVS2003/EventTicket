@@ -1,0 +1,53 @@
+﻿@model IEnumerable<EventTicket.Data.Models.PaymentHistory>
+
+@{
+    ViewData["Title"] = "Transaction History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Transaction History</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Event Name</th>
+            <th>Amount</th>
+            <th>Payment Method</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model)
+        {
+            <tr>
+                <td>@payment.OrderId</td>
+                <td>@payment.Order.Event.Name</td>
+                <td>@payment.Amount.ToString("N0") VND</td>
+                <td>@payment.PaymentMethod</td>
+                <td>@payment.PaymentDate?.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@payment.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="PurchasedTickets" asp-controller="Profile">View Purchased Tickets</a> |
+    <a asp-action="Index" asp-controller="Home">Back to Home</a>
+</div>

@@ -31,15 +31,17 @@ public partial class EventTicketContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserTicket> UserTickets { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-M592O8F\\SQLEXPRESS;Database=EventTicket;Integrated Security=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-M592O8F\\SQLEXPRESS;Initial Catalog=EventTicket;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A2BA7C8A6BA");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A2B0C476E06");
 
             entity.ToTable("Category");
 
@@ -54,7 +56,7 @@ public partial class EventTicketContext : DbContext
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.EventId).HasName("PK__Event__7944C870BAD49142");
+            entity.HasKey(e => e.EventId).HasName("PK__Event__7944C870300513FC");
 
             entity.ToTable("Event");
 
@@ -81,7 +83,7 @@ public partial class EventTicketContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BAFB651F7CB");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BAFDDE87B27");
 
             entity.ToTable("Order");
 
@@ -120,7 +122,7 @@ public partial class EventTicketContext : DbContext
 
         modelBuilder.Entity<OrderHistory>(entity =>
         {
-            entity.HasKey(e => e.OrderHistoryId).HasName("PK__OrderHis__718E6CB3C4083E86");
+            entity.HasKey(e => e.OrderHistoryId).HasName("PK__OrderHis__718E6CB35EEAD138");
 
             entity.ToTable("OrderHistory");
 
@@ -145,7 +147,7 @@ public partial class EventTicketContext : DbContext
 
         modelBuilder.Entity<PaymentHistory>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__PaymentH__9B556A5861A74F4B");
+            entity.HasKey(e => e.PaymentId).HasName("PK__PaymentH__9B556A587FD94145");
 
             entity.ToTable("PaymentHistory");
 
@@ -179,7 +181,7 @@ public partial class EventTicketContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE3AE590E58D");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE3A571CD9AC");
 
             entity.ToTable("Role");
 
@@ -192,7 +194,7 @@ public partial class EventTicketContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.TicketId).HasName("PK__Ticket__712CC627FC916651");
+            entity.HasKey(e => e.TicketId).HasName("PK__Ticket__712CC627ACD5361F");
 
             entity.ToTable("Ticket");
 
@@ -217,13 +219,13 @@ public partial class EventTicketContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACD86338B3");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CCACCD337E53");
 
             entity.ToTable("User");
 
-            entity.HasIndex(e => e.Username, "UQ__User__536C85E4ED7E8BC5").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__User__536C85E429087910").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__User__A9D105345DBE2399").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__User__A9D1053488D9555E").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.CreatedDate)
@@ -244,6 +246,33 @@ public partial class EventTicketContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("FK__User__RoleID__5535A963");
+        });
+
+        modelBuilder.Entity<UserTicket>(entity =>
+        {
+            entity.HasKey(e => e.UserTicketId).HasName("PK__UserTick__96EB943B09065420");
+
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UpdatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.UserTickets)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserTicke__Order__208CD6FA");
+
+            entity.HasOne(d => d.Ticket).WithMany(p => p.UserTickets)
+                .HasForeignKey(d => d.TicketId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserTicke__Ticke__1F98B2C1");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserTickets)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserTicke__UserI__1EA48E88");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,0 +1,174 @@
+﻿@model EventTicket.Web.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- Thêm tiêu đề với các liên kết điều hướng -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Dashboard</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Events" asp-action="Index">Quản lý sự kiện</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Categories" asp-action="Index">Quản lý danh mục</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>@Model.TotalTicketsSold</h3>
+                <p>Tổng số vé đã bán</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <a asp-area="Admin" asp-controller="Tickets" asp-action="Index" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>@Model.TotalEvents</h3>
+                <p>Tổng số sự kiện</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <a asp-area="Admin" asp-controller="Events" asp-action="Index" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>@Model.TotalUsers</h3>
+                <p>Tổng số người dùng</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>@Model.TotalRevenue.ToString("N0") VND</h3>
+                <p>Tổng doanh thu</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <section class="col-lg-7 connectedSortable">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    Doanh thu theo tháng (@DateTime.Now.Year)
+                </h3>
+            </div>
+            <div class="card-body">
+                <canvas id="sales-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </section>
+    <section class="col-lg-5 connectedSortable">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-percentage mr-1"></i>
+                    Tỷ lệ tăng trưởng doanh thu
+                </h3>
+            </div>
+            <div class="card-body">
+                <h4 class="@(Model.PercentGrowth >= 0 ? "text-success" : "text-danger")">
+                    @Model.PercentGrowth.ToString("F2")%
+                    <small>(so với tháng trước)</small>
+                </h4>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-star mr-1"></i>
+                    Top 5 sự kiện nổi bật
+                </h3>
+            </div>
+            <div class="card-body">
+                @if (!Model.TopEvents.Any())
+                {
+                    <p>Chưa có sự kiện nào nổi bật.</p>
+                }
+                else
+                {
+                    <canvas id="top-events-chart" style="min-height: 200px; height: 200px; max-height: 200px; max-width: 100%;"></canvas>
+                }
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script>
+        $(function () {
+            // Biểu đồ doanh thu theo tháng
+            var salesChartCanvas = $('#sales-chart').get(0).getContext('2d');
+            var salesChartData = {
+                labels: @Html.Raw(Json.Serialize(ViewBag.MonthLabels)),
+                datasets: [{
+                    label: 'Doanh thu (VND)',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    data: @Html.Raw(Json.Serialize(ViewBag.MonthlyRevenues))
+                        }]
+            };
+            var salesChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { display: false }, beginAtZero: true }
+                }
+            };
+            new Chart(salesChartCanvas, { type: 'line', data: salesChartData, options: salesChartOptions });
+
+            // Biểu đồ Top Events
+            var topEventsChartCanvas = $('#top-events-chart').get(0).getContext('2d');
+            var topEventsData = {
+                labels: @Html.Raw(Json.Serialize(Model.TopEvents.Select(e => e.Name))),
+                datasets: [{
+                    label: 'Số vé bán ra',
+                    backgroundColor: 'rgba(255,99,132,0.7)',
+                    borderColor: 'rgba(255,99,132,1)',
+                    data: @Html.Raw(Json.Serialize(Model.TopEvents.Select(e => e.TotalTickets)))
+                        }]
+            };
+            var topEventsOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { display: false }, beginAtZero: true }
+                }
+            };
+            new Chart(topEventsChartCanvas, { type: 'bar', data: topEventsData, options: topEventsOptions });
+        });
+    </script>
+}

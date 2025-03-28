@@ -90,25 +90,31 @@ namespace EventTicket.Web.Controllers
         }
 
         // Trang Lịch sử giao dịch
-        public async Task<IActionResult> PaymentHistory()
+        public async Task<IActionResult> PurchasedTickets()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+            var userTickets = await _context.UserTickets
+                .Include(ut => ut.Ticket)
+                    .ThenInclude(t => t.Event)
+                .Include(ut => ut.Order)
+                .Where(ut => ut.UserId == userId && (ut.IsDeleted == false || ut.IsDeleted == null))
+                .OrderByDescending(ut => ut.OrderId)
+                .ToListAsync();
+
+            return View(userTickets);
+        }
+
+        public async Task<IActionResult> TransactionHistory()
+        {
+            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
             var paymentHistories = await _context.PaymentHistories
-                .Where(ph => ph.UserId == userId)
+                .Include(ph => ph.Order)
+                    .ThenInclude(o => o.Event)
+                .Where(ph => ph.UserId == userId && (ph.IsDeleted == false || ph.IsDeleted == null))
+                .OrderByDescending(ph => ph.OrderId)
                 .ToListAsync();
 
             return View(paymentHistories);
-        }
-
-        // Trang Vé đã mua
-        public async Task<IActionResult> PurchasedTickets()
-        {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var orders = await _context.Orders
-                .Where(o => o.UserId == userId)
-                .ToListAsync();
-
-            return View(orders);
         }
     }
 }
